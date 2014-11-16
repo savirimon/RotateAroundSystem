@@ -16,7 +16,9 @@ public class RotateAroundBehavior : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		for(int i = 0; i < numOrbiters; i++){
-			UpdateOrbiterPosition(i);
+			if(i < orbiters.Length){
+				UpdateOrbiterPosition(i);
+			}
 		}
 	}
 
@@ -28,13 +30,32 @@ public class RotateAroundBehavior : MonoBehaviour {
 		SetOrbiterPositions();
 	}
 
+	void AddOrbiter(){
+		numOrbiters++;
+		SetOrbiterPositions();
+	}
+
+	void RemoveOrbiter(){
+		if(numOrbiters > 0){
+			numOrbiters--;
+		}
+		SetOrbiterPositions();
+	}
+
 	void SetOrbiterPositions(){
 		float angleDiv = 360f / (float)numOrbiters;
 
+		if(numOrbiters > orbiters.Length){
+			angleDiv = 360f / orbiters.Length;
+		}
+
 		Vector3 orbitPos = new Vector3(transform.position.x + orbitRadius, transform.position.y, transform.position.z);
 		for(int i = 0; i < numOrbiters; i++){
-			orbiters[i].GetComponent<Transform>().localPosition = orbitPos;	//move to initial pos
-			orbiters[i].GetComponent<Transform>().RotateAround(sourceObject.transform.position, Vector3.forward, angleDiv * i);//rotate
+			if (i < orbiters.Length){
+				orbiters[i].GetComponent<Transform>().localPosition = orbitPos;	//move to initial pos
+				orbiters[i].GetComponent<Transform>().RotateAround(sourceObject.transform.position, Vector3.forward, angleDiv * i);//rotate
+			}
+			
 		}
 	}
 
